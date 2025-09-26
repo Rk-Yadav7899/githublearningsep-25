@@ -1,27 +1,27 @@
----
-name: this project is Java with Maven 
+name: this project is Java with Maven
 
 on:
-    push:
-        branches:
-            - main
+  push:
+    branches:
+      - main
 
 jobs:
-    job1:
-        runs-on: ubuntu-latest
-        outputs:
-          artifact: my-app
-        steps:
-          - id: step1
-            name: step1
-            run: echo tip='how are you?' >> $GITHUB_OUTPUT
-          - name: step2
-            run: "output from step1 is ${{ steps.step1.outputs.tip }}"
+  job1:
+    runs-on: ubuntu-latest
+    outputs:
+      # map job output 'artifact' to the step output set below
+      artifact: ${{ steps.step1.outputs.artifact }}
+    steps:
+      - id: step1
+        name: Set artifact output
+        run: echo "tip=hello" >> $GITHUB_OUTPUT
 
-    job2:
-      needs: job1
-      runs-on: ubuntu-latest
-      steps:
-        -run: echo "${{ needs.job1.outputs.artifacts }}"
+      - name: Show step output inside job1
+        run: echo "output from step1 is ${{ steps.step1.outputs.tip }}"
 
-
+  job2:
+    needs: job1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Read artifact from previous job
+        run: echo "${{ needs.job1.outputs.artifact }}"

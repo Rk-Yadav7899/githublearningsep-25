@@ -7,14 +7,21 @@ on:
             - main
 
 jobs:
-    context-job:
+    job1:
         runs-on: ubuntu-latest
+        outputs:
+          artifact: my-app
         steps:
-          - run: "echo Repo: ${{ github.repository }} by ${{  github.actor }}"
-          - name: Show complete github context
-            run: echo '${{  toJson(github) }}'
-          - name: Show complete env context
-            run: echo '${{  toJson(env) }}'
-          - name: Show complete runner context
-            run: echo '${{  toJson(runner) }}'
+          - id: step1
+            name: step1
+            run: echo tip='how are you?' >> $GITHUB_OUTPUT
+          - name: step2
+            run: "output from step1 is ${{ steps.step1.outputs.tip }}"
+
+    job2:
+      needs: job1
+      runs-on: ubuntu-latest
+      steps:
+        -run: echo "${{ needs.job1.outputs.artifacts }}"
+
 

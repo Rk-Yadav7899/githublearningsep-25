@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       # map job output 'artifact' to the step output set below
-      artifact: ${{ steps.step1.outputs.artifact }}
+      artifact: my-app
     steps:
       - id: step1
         name: Set artifact output
